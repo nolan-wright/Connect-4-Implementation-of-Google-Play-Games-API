@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Project_v3</string>
+    <string name="dialog_neutral_button_text">OK</string>
+    <string name="dialog_negative_button_text">NO</string>
+    <string name="dialog_positive_button_text">YES</string>
+    <string name="dialog_title_completed">Game completed.</string>
+    <string name="dialog_message_lost">You lost.</string>
+    <string name="dialog_message_won">You won!</string>
+    <string name="dialog_message_tie">You tied.</string>
+    <string name="dialog_title_confirmation">Are you sure?</string>
+    <string name="dialog_message_forfeit">You are in the middle of a match. Continuing with this action will forfeit the match.</string>
+    <string name="dialog_title_forfeited">Opponent forfeited.</string>
+    <string name="dialog_title_join_failure">Could not join the match.</string>
+    <string name="dialog_message_join_failure">The host has already left the match.</string>
+    <string name="snackbar_text">has invited you to a match.</string>
+    <string name="snackbar_action_text">JOIN</string>
+</resources>

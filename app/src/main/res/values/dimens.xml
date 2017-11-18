@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="colorIndicator_width">10dp</dimen>
+    <dimen name="profilePic_size">50dp</dimen>
+    <dimen name="fragment_width">350dp</dimen>
+    <dimen name="fragment_height">300dp</dimen>
+    <dimen name="playerInfo_margin">10dp</dimen>
+    <dimen name="playerName_marginLeft">10dp</dimen>
+    <dimen name="playerName_size">20sp</dimen>
+</resources>

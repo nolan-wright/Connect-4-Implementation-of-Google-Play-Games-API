@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.purduegmail.mobileapps.project_v3.GameActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:onClick="exit"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text="EXIT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- container for player displays and fragment -->
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <!-- player 2 display -->
+            <LinearLayout
+                android:layout_marginBottom="@dimen/playerInfo_margin"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:background="@color/colorGreen"
+                    android:layout_width="@dimen/colorIndicator_width"
+                    android:layout_height="@dimen/profilePic_size" />
+                <ImageView
+                    android:id="@+id/profilePic_Player2"
+                    android:layout_width="@dimen/profilePic_size"
+                    android:layout_height="@dimen/profilePic_size" />
+                <TextView
+                    android:layout_marginStart="@dimen/playerName_marginLeft"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/playerName_size"
+                    android:id="@+id/displayName_Player2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ProgressBar
+                        android:visibility="gone"
+                        android:id="@+id/progressBar_Player2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- fragment -->
+            <LinearLayout
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:orientation="horizontal"
+                android:id="@+id/fragment_container"
+                android:layout_width="@dimen/fragment_width"
+                android:layout_height="@dimen/fragment_height" />
+
+            <!-- player 1 display -->
+            <LinearLayout
+                android:layout_marginTop="@dimen/playerInfo_margin"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:background="@color/colorRed"
+                    android:layout_width="@dimen/colorIndicator_width"
+                    android:layout_height="@dimen/profilePic_size" />
+                <ImageView
+                    android:id="@+id/profilePic_Player1"
+                    android:layout_width="@dimen/profilePic_size"
+                    android:layout_height="@dimen/profilePic_size" />
+                <TextView
+                    android:layout_marginStart="@dimen/playerName_marginLeft"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/playerName_size"
+                    android:id="@+id/displayName_Player1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
