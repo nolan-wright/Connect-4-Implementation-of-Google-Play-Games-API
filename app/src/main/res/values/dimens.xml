@@ -7,4 +7,18 @@
     <dimen name="playerInfo_margin">10dp</dimen>
     <dimen name="playerName_marginLeft">10dp</dimen>
     <dimen name="playerName_size">20sp</dimen>
+    <dimen name="chat_icon_size">40dp</dimen>
+    <dimen name="chat_icon_marginRight">15dp</dimen>
+    <dimen name="exit_icon_size">20dp</dimen>
+    <dimen name="actionbar_title">22sp</dimen>
+    <dimen name="chat_bubble_corners">20dp</dimen>
+    <dimen name="chat_message_max_width">200dp</dimen>
+    <dimen name="chat_message_padding_topbottom">8dp</dimen>
+    <dimen name="chat_message_padding_sides">16dp</dimen>
+    <dimen name="chat_message_text_size">18sp</dimen>
+    <dimen name="chat_message_topbottom_margin">8dp</dimen>
+    <dimen name="chat_message_side_margin">4dp</dimen>
+    <dimen name="chat_notification_badge_size">16dp</dimen>
+    <dimen name="chat_notification_badge_margin">2dp</dimen>
+    <dimen name="cell_padding">8dp</dimen>
 </resources>

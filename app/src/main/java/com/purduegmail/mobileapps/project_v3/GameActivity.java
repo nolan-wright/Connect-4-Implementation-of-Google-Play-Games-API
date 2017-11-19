@@ -3,28 +3,27 @@ package com.purduegmail.mobileapps.project_v3;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.InvitationsClient;
 import com.google.android.gms.games.RealTimeMultiplayerClient;
 import com.google.android.gms.games.multiplayer.Invitation;
@@ -37,7 +36,9 @@ import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateCallbac
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameActivity extends AppCompatActivity
@@ -46,13 +47,19 @@ public class GameActivity extends AppCompatActivity
     final static String TAG = "GameActivity";
 
     // request code constants
-    final static int RC_SELECT_PLAYERS = 0;
-    final static int RC_WAITING_FOR_PLAYERS = 1;
+    private final static int RC_SELECT_PLAYERS = 0;
+    private final static int RC_WAITING_FOR_PLAYERS = 1;
+
+    // name constants
+    public final static String MESSAGES = "chat-history";
+    public final static String MESSAGE_RECEIVED = "message-received";
+    public final static String MESSAGE_RECEIVED_EVENT = "message-received-event";
 
     // status constants
-    final static int MATCH_ACTIVE = 0;
-    final static int MATCH_DECIDED = 1;
-    final static int MATCH_DRAWN = 2;
+    private final static int MATCH_ACTIVE = 0;
+    private final static int MATCH_DECIDED = 1;
+    private final static int MATCH_DRAWN = 2;
+    private final static int CHAT_MESSAGE = 3;
 
     // implementation of GameFragmentListener
     public void onColumnClicked(int column) {
@@ -116,17 +123,20 @@ public class GameActivity extends AppCompatActivity
         fragment.highlightSequences(winningSequences);
     }
 
-    private RealTimeMultiplayerClient client;
-    private RoomConfig config;
+    private RealTimeMultiplayerClient client; // talks to google play services
+    private RoomConfig config; // describes the room, so that is can be created/joined
     private String myParticipantId;
     private String opponentParticipantId;
     private boolean goesFirst;
-    private Room room;
-    private Game game;
-    private GameFragment fragment;
+    private Room room; // provides connection between participants
+    private Game game; // connect 4 game logic
+    private GameFragment fragment; // connect 4 game display
     private boolean hasWon = false;
     private boolean hasTied = false;
     private boolean gameIsOngoing = false;
+    private ArrayList<ChatMessage> messages;
+    private BroadcastReceiver messageReceiver; // receives sent messages from ChatActivity
+    private boolean isInFocus = false; // if this activity has the focus
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +169,16 @@ public class GameActivity extends AppCompatActivity
         }
     }
     @Override
+    protected void onResume() {
+        super.onResume();
+        isInFocus = true;
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isInFocus = false;
+    }
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -185,6 +205,14 @@ public class GameActivity extends AppCompatActivity
                 }
                 Log.i(TAG, "Done waiting for players");
                 break;
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+        if (room != null) {
+            client.leave(config, room.getRoomId()); // leave room
         }
     }
 
@@ -219,12 +247,12 @@ public class GameActivity extends AppCompatActivity
     }
     class MessageReceivedHandler implements OnRealTimeMessageReceivedListener {
         public void onRealTimeMessageReceived(RealTimeMessage message) {
-            dismissSpinner();
             byte[] data = message.getMessageData();
             int status = (int)data[0];
             int row, column;
             switch (status) {
                 case MATCH_ACTIVE:
+                    dismissSpinner();
                     row = (int)data[1];
                     column = (int)data[2];
                     game.processOpponentMove(row, column);
@@ -232,6 +260,7 @@ public class GameActivity extends AppCompatActivity
                     fragment.setColumnsClickable(true);
                     break;
                 case MATCH_DECIDED: // match lost
+                    dismissSpinner();
                     gameIsOngoing = false;
                     row = (int)data[1];
                     column = (int)data[2];
@@ -242,6 +271,7 @@ public class GameActivity extends AppCompatActivity
                             getResources().getString(R.string.dialog_title_completed));
                     break;
                 case MATCH_DRAWN:
+                    dismissSpinner();
                     gameIsOngoing = false;
                     row = (int)data[1];
                     column = (int)data[2];
@@ -249,6 +279,15 @@ public class GameActivity extends AppCompatActivity
                     fragment.drawUpdate(row, column, Game.OPPONENT_MARKER);
                     showInformationalDialog(getResources().getString(R.string.dialog_message_tie),
                             getResources().getString(R.string.dialog_title_completed));
+                    break;
+                case CHAT_MESSAGE: // opponent sent a chat message
+                    byte[] chatMessageInBytes = Arrays.copyOfRange(data, 1, data.length);
+                    String chatMessage = new String(chatMessageInBytes);
+                    broadcastMessage(chatMessage);
+                    messages.add(new ChatMessage(chatMessage, false));
+                    if (isInFocus) {
+                        showChatNotificationBadge();
+                    }
                     break;
             }
         }
@@ -326,6 +365,13 @@ public class GameActivity extends AppCompatActivity
     /**
      * onClick methods
      */
+    // chat button
+    public void chat(View v) {
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra(MESSAGES, messages);
+        dismissChatNotificationBadge();
+        startActivity(intent);
+    }
     // exit button
     public void exit(View v) {
         if (!gameIsOngoing) {
@@ -340,6 +386,30 @@ public class GameActivity extends AppCompatActivity
     /**
      * helper methods
      */
+    // called in MessageReceivedHandler.onRealTimeMessageReceived
+    private void showChatNotificationBadge() {
+        View badge = findViewById(R.id.chat_notification_badge);
+        badge.setVisibility(View.VISIBLE);
+    }
+    // called in chat
+    private void dismissChatNotificationBadge() {
+        View badge = findViewById(R.id.chat_notification_badge);
+        badge.setVisibility(View.GONE);
+    }
+    // called in MessageReceivedHandler.onRealTimeMessageReceived
+    private void broadcastMessage(String message) {
+        Intent intent = new Intent(MESSAGE_RECEIVED_EVENT);
+        intent.putExtra(MESSAGE_RECEIVED, message);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+    // called in initializeUI
+    private void displayCustomActionBar() {
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
+        LayoutInflater li = LayoutInflater.from(this);
+        View custom_actionbar_view = li.inflate(R.layout.custom_actionbar, null);
+        ab.setCustomView(custom_actionbar_view);
+        ab.setDisplayShowCustomEnabled(true);
+    }
     // called in InvitationHandler.onInvitationReceived
     private void showInvitationSnackbar(final Invitation invitation) {
         View content = findViewById(android.R.id.content);
@@ -460,6 +530,7 @@ public class GameActivity extends AppCompatActivity
                 .getCurrentPlayerId().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String playerId) {
+                // establish participant ids
                 myParticipantId = room.getParticipantId(playerId);
                 int index = room.getParticipantIds().indexOf(myParticipantId);
                 if (index == 0) {
@@ -470,14 +541,40 @@ public class GameActivity extends AppCompatActivity
                     goesFirst = false;
                     opponentParticipantId = room.getParticipantIds().get(0);
                 }
-                game = new Game(GameActivity.this);
+                game = new Game(GameActivity.this); // initialize game
                 initializeUI();
-                gameIsOngoing = true;
+                messages = new ArrayList<>();
+                // initialize broadcastreceiver
+                messageReceiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        String message = intent.getStringExtra(ChatActivity.MESSAGE_SENT);
+                        // prepare communication to opponent
+                        byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
+                        byte[] data = new byte[messageBytes.length + 1];
+                        data[0] = (byte)CHAT_MESSAGE;
+                        System.arraycopy(messageBytes, 0, data, 1, messageBytes.length);
+                        // send communication
+                        client.sendReliableMessage(data, room.getRoomId(), opponentParticipantId,
+                                new RealTimeMultiplayerClient.ReliableMessageSentCallback() {
+                                    @Override
+                                    public void onRealTimeMessageSent(int i, int i1, String s) {
+                                        Log.i(TAG, "Message sent, chat");
+                                    }
+                                });
+                        messages.add(new ChatMessage(message, true));
+                    }
+                };
+                // register broadcastreceiver
+                LocalBroadcastManager.getInstance(GameActivity.this).registerReceiver(messageReceiver,
+                        new IntentFilter(ChatActivity.MESSAGE_SENT_EVENT));
+                gameIsOngoing = true; // game has begun
             }
         });
     }
     // called in initializeGame
     private void initializeUI() {
+        displayCustomActionBar();
         setContentView(R.layout.activity_game);
         // initialize player displays
         TextView displayName_player1 = findViewById(R.id.displayName_Player1);

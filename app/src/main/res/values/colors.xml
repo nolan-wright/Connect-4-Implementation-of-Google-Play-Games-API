@@ -9,6 +9,9 @@
     <color name="colorYellow">#FFFF00</color>
     <color name="colorGreen">#00CE00</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorAlmostWhite">#FAFAFA</color>
     <color name="colorDarkRed">#bf0000</color>
     <color name="colorDarkGreen">#008000</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorNearBlack">#323232</color>
 </resources>

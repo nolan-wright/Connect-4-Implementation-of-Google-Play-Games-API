@@ -18,42 +18,42 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column0_row1"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column0_row2"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column0_row3"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column0_row4"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column0_row5"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue" />
+            android:background="@drawable/cell" />
     </LinearLayout>
     <!-- Column 1 -->
     <LinearLayout
@@ -68,42 +68,42 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column1_row1"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column1_row2"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column1_row3"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column1_row4"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column1_row5"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue" />
+            android:background="@drawable/cell" />
     </LinearLayout>
     <!-- Column 2 -->
     <LinearLayout
@@ -118,42 +118,42 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column2_row1"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column2_row2"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column2_row3"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column2_row4"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column2_row5"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue" />
+            android:background="@drawable/cell" />
     </LinearLayout>
     <!-- Column 3 -->
     <LinearLayout
@@ -168,42 +168,42 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column3_row1"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column3_row2"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column3_row3"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column3_row4"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column3_row5"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue" />
+            android:background="@drawable/cell" />
     </LinearLayout>
     <!-- Column 4 -->
     <LinearLayout
@@ -218,42 +218,42 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column4_row1"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column4_row2"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column4_row3"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column4_row4"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column4_row5"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue" />
+            android:background="@drawable/cell" />
     </LinearLayout>
     <!-- Column 5-->
     <LinearLayout
@@ -268,42 +268,42 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column5_row1"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column5_row2"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column5_row3"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column5_row4"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column5_row5"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue" />
+            android:background="@drawable/cell" />
     </LinearLayout>
     <!-- Column 6 -->
     <LinearLayout
@@ -318,42 +318,42 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column6_row1"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column6_row2"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column6_row3"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column6_row4"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLightBlue"/>
+            android:background="@drawable/cell"/>
         <ImageView
             android:padding="8dp"
             android:id="@+id/column6_row5"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorLighterBlue" />
+            android:background="@drawable/cell" />
     </LinearLayout>
 
 </LinearLayout>

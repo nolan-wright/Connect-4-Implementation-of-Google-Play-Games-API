@@ -14,4 +14,6 @@
     <string name="dialog_message_join_failure">The host has already left the match.</string>
     <string name="snackbar_text">has invited you to a match.</string>
     <string name="snackbar_action_text">JOIN</string>
+    <string name="chat_button_text">SEND</string>
+    <string name="compose_message_hint">Enter message</string>
 </resources>

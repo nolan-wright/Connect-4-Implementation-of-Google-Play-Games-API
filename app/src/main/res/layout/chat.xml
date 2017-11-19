@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ListView
+        android:transcriptMode="alwaysScroll"
+        android:divider="@null"
+        android:id="@+id/chatView"
+        android:layout_above="@+id/container_messageComposition"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
+
+    <View
+        android:alpha=".5"
+        android:background="@color/colorBlack"
+        android:layout_above="@id/container_messageComposition"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:id="@+id/container_messageComposition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:padding="8dp"
+            android:hint="@string/compose_message_hint"
+            android:background="@android:color/transparent"
+            android:id="@+id/et_composeMessage"
+            android:inputType="textCapSentences|textMultiLine"
+            android:scrollHorizontally="false"
+            android:layout_weight="8"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:onClick="send"
+            android:text="@string/chat_button_text"
+            android:background="?attr/selectableItemBackground"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</RelativeLayout>
