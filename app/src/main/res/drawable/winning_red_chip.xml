@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="oval">
+            <padding
+                android:left="@dimen/winning_chip_border_padding"
+                android:right="@dimen/winning_chip_border_padding"
+                android:top="@dimen/winning_chip_border_padding"
+                android:bottom="@dimen/winning_chip_border_padding"/>
+            <solid android:color="@color/colorDarkRed" />
+        </shape>
+    </item>
+    <item>
+        <shape
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="oval">
+
+            <solid android:color="@color/colorRed" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/star"
+        android:top="@dimen/winning_chip_padding"
+        android:bottom="@dimen/winning_chip_padding"
+        android:left="@dimen/winning_chip_padding"
+        android:right="@dimen/winning_chip_padding"/>
+</layer-list>

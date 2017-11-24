@@ -60,7 +60,7 @@ public class ChatActivity extends AppCompatActivity {
      * on click methods
      */
     // exit button
-    public void exit(View v) {
+    public void exitChat(View v) {
         finish();
     }
     // send button

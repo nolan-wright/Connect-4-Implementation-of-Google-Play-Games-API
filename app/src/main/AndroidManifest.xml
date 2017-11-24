@@ -26,7 +26,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameActivity" />
-        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".PlayBotActivity"></activity>
     </application>
 
 </manifest>

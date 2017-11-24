@@ -17,7 +17,7 @@
         android:src="@drawable/exit"
         android:scaleType="fitCenter"
         android:background="@null"
-        android:onClick="exitChat"
+        android:onClick="exit"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_width="@dimen/exit_icon_size"

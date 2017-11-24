@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.common.images.ImageManager;
+import com.google.android.gms.games.AchievementsClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.InvitationsClient;
 import com.google.android.gms.games.RealTimeMultiplayerClient;
@@ -78,8 +78,11 @@ public class GameActivity extends AppCompatActivity
         fragment.setColumnsClickable(false);
         fragment.drawUpdate(row, column, Game.MY_MARKER);
         if (hasWon) {
+            fragment.highlightSequences(winningSequences, Game.MY_MARKER);
             showInformationalDialog(getResources().getString(R.string.dialog_message_won),
                     getResources().getString(R.string.dialog_title_completed));
+            checkForAchievements();
+            // send message to opponent
             byte[] data = {(byte)MATCH_DECIDED, (byte)row, (byte)column};
             client.sendReliableMessage(data, room.getRoomId(), opponentParticipantId,
                     new RealTimeMultiplayerClient.ReliableMessageSentCallback() {
@@ -120,7 +123,7 @@ public class GameActivity extends AppCompatActivity
     public void onGameWon(ArrayList<int[][]> winningSequences) {
         hasWon = true;
         gameIsOngoing = false;
-        fragment.highlightSequences(winningSequences);
+        this.winningSequences = winningSequences;
     }
 
     private RealTimeMultiplayerClient client; // talks to google play services
@@ -131,12 +134,13 @@ public class GameActivity extends AppCompatActivity
     private Room room; // provides connection between participants
     private Game game; // connect 4 game logic
     private GameFragment fragment; // connect 4 game display
+    private ArrayList<int[][]> winningSequences;
     private boolean hasWon = false;
     private boolean hasTied = false;
     private boolean gameIsOngoing = false;
     private ArrayList<ChatMessage> messages;
     private BroadcastReceiver messageReceiver; // receives sent messages from ChatActivity
-    private boolean isInFocus = false; // if this activity has the focus
+    private boolean isInFocus = false; // whether this activity has the focus / is being displayed
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,7 +270,7 @@ public class GameActivity extends AppCompatActivity
                     column = (int)data[2];
                     game.processOpponentMove(row, column);
                     fragment.drawUpdate(row, column, Game.OPPONENT_MARKER);
-                    fragment.highlightSequences(game.getLosingSequences());
+                    fragment.highlightSequences(game.getLosingSequences(), Game.OPPONENT_MARKER);
                     showInformationalDialog(getResources().getString(R.string.dialog_message_lost),
                             getResources().getString(R.string.dialog_title_completed));
                     break;
@@ -386,6 +390,20 @@ public class GameActivity extends AppCompatActivity
     /**
      * helper methods
      */
+    // called in onMyMoveProcessed
+    private void checkForAchievements() {
+        AchievementsClient client = Games.getAchievementsClient(this,
+                GoogleSignIn.getLastSignedInAccount(this));
+        if (winningSequences.size() > 1) {
+            client.unlock(getString(R.string.achievement_master_tiger));
+        }
+        for (int[][] sequence : winningSequences) {
+            if (sequence.length > 4) {
+                client.unlock(getString(R.string.achievement_expert_lion));
+                return;
+            }
+        }
+    }
     // called in MessageReceivedHandler.onRealTimeMessageReceived
     private void showChatNotificationBadge() {
         View badge = findViewById(R.id.chat_notification_badge);
@@ -642,4 +660,5 @@ public class GameActivity extends AppCompatActivity
             }
         });
     }
+
 }

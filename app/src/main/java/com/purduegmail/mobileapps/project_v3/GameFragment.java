@@ -1,8 +1,6 @@
 package com.purduegmail.mobileapps.project_v3;
 
 import android.app.Fragment;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -60,6 +58,7 @@ public class GameFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                 Bundle savedInstanceState) {
@@ -71,24 +70,28 @@ public class GameFragment extends Fragment {
         initializeCellMap();
         return rootView;
     }
+
     @Override
     public void onPause() {
         super.onPause();
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listener.onFragmentInflated();
     }
 
-    public void highlightSequences(ArrayList<int[][]> sequences) {
+    public void highlightSequences(ArrayList<int[][]> sequences, int marker) {
+        int resource = (marker == Game.MY_MARKER)
+                ? R.drawable.winning_red_chip : R.drawable.winning_green_chip;
         for (int[][] sequence : sequences) {
             for (int[] coordinate : sequence) {
                 // coordinate[0] = row
                 // coordinate[1] = column
                 int[] rowArray = (int[])cellMap.get(coordinate[0]);
                 ImageView cell = getView().findViewById(rowArray[coordinate[1]]);
-                cell.setBackgroundColor(Color.YELLOW);
+                cell.setImageResource(resource);
             }
         }
     }
@@ -96,14 +99,12 @@ public class GameFragment extends Fragment {
     public void drawUpdate(int row, int column, int marker) {
         int[] rowArray = (int[])cellMap.get(row);
         ImageView cell = getView().findViewById(rowArray[column]);
-        Drawable chip;
         if (marker == Game.MY_MARKER) {
-            chip = getResources().getDrawable(R.drawable.red_chip);
+            cell.setImageResource(R.drawable.red_chip);
         }
         else /* marker == Game.OPPONENT_MARKER */ {
-            chip = getResources().getDrawable(R.drawable.green_chip);
+            cell.setImageResource(R.drawable.green_chip);
         }
-        cell.setImageDrawable(chip);
     }
 
     public void setColumnsClickable(boolean clickable) {

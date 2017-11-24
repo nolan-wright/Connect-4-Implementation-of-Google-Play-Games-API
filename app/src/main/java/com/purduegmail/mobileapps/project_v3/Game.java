@@ -7,28 +7,30 @@ import java.util.ArrayList;
  */
 
 public class Game {
+
     /**
-     * Row and column sizes
+     * Number of rows
      */
-    private static final int ROWS = 6;
-    private static final int COLUMNS = 7;
+    public static final int ROWS = 6;
+    /**
+     * Number of columns
+     */
+    public static final int COLUMNS = 7;
     /**
      * MY_MARKER is the chip placed for my moves
-     * OPPONENT_MARKER is the chip placed for the opponent
-     * NULL_MARKER means nothing has been placed there
      */
     public static final int MY_MARKER = 1;
-    public static final int OPPONENT_MARKER = 2;
-    private static final int NULL_MARKER = 0;
-
     /**
-     * an instance of this class
-     * has one listener associated
-     * with it
+     * OPPONENT_MARKER is the chip placed for the opponent moves
      */
-    private GameListener listener;
-
+    public static final int OPPONENT_MARKER = 2;
     /**
+     * NULL_MARKER means nothing has been placed there
+     */
+    public static final int NULL_MARKER = 0;
+
+    private GameListener listener;
+    /*
      * contains board state
      * board is 7 columns wide
      * and 6 rows long, like so:
@@ -40,21 +42,25 @@ public class Game {
      * # # # # # # #
      */
     private int[][] board;
-
-    /**
-     * list of 4 in a row sequences
-     * it is possible to have more than one
+    public int[][] getBoard() {
+        return board;
+    }
+    /*
+     * it is possible to have more than one winning sequence
+     * a winning sequence is an array of coordinates
+     * coordinates are themselves arrays as follows: {row, column}
      */
     private ArrayList<int[][]> winningSequences;
 
+    // constructor
     public Game(GameListener listener) {
         winningSequences = new ArrayList<>();
         this.listener = listener;
         board = generateNewBoard();
     }
 
-    /** create new board
-     * set all cells in the board to NULL_MARKER initially
+    /* creates new board
+     * sets all cells in the board to NULL_MARKER initially
      * NULL_MARKER represents an open cell in the board
      */
     private int[][] generateNewBoard() {
@@ -67,12 +73,18 @@ public class Game {
         return newBoard;
     }
 
+    /**
+     * input column that player has selected for their move,
+     * notifies listener of {row, column} coordinate where the
+     * move will fall, also notifies listener if win condition
+     * has been met or catscratch (tie) has occurred
+     */
     public void processMyMove(int column) {
         int row = ROWS - 1;
         while (row >= 0) {
             if (board[row][column] == NULL_MARKER) {
                 board[row][column] = MY_MARKER;
-                // check for catscratch
+                // check for catscratch (tie/draw/stalemate)
                 if (isCatscratch())  {
                     listener.onGameTied();
                 }
@@ -89,6 +101,9 @@ public class Game {
             }
         }
     }
+    /**
+     * simply applies the opponent's marker to specified cell
+     */
     public void processOpponentMove(int row, int column) {
         board[row][column] = OPPONENT_MARKER;
     }
@@ -259,22 +274,28 @@ public class Game {
         return null;
     }
 
-    private boolean hasWinningSequence() {
-        return checkColumns() || checkRows() || checkDiagonals();
-    }
-    /**
-     * indices
-     * failing column
-     * failing column
-     * passing column
-     * 0 0 0 0
-     * 1 0 1 1
-     * 2 1 2 1
-     * 3 1 1 1
-     * 4 1 1 1
-     * 5 2 1 2
+    /*
+     * determines whether this board has satisfied
+     * the win condition, also populates the list of
+     * winningSequences if the win condition has been met
      */
+    private boolean hasWinningSequence() {
+        // ensure all checks are performed
+        boolean columnHasSequence = checkColumns();
+        boolean rowHasSequence = checkRows();
+        boolean diagonalsHaveSequence = checkDiagonals();
+        return columnHasSequence || rowHasSequence || diagonalsHaveSequence;
+    }
     private boolean checkColumns() {
+        /* Example:
+         * indices, failing column, failing column, passing column
+         * 0 0 0 0
+         * 1 0 1 1
+         * 2 1 2 1
+         * 3 1 1 1
+         * 4 1 1 1
+         * 5 2 1 2
+         */
         int winning_threshold = 2;
         ArrayList<int[]> sequence = new ArrayList<>();
         // starts at bottom-left, works up and across
@@ -310,13 +331,13 @@ public class Game {
         }
         return false;
     }
-    /**
-     * Example:
-     * 0 1 2 3 4 5 6 (indices)
-     * 1 1 1 2 1 1 1 (failing row)
-     * 1 2 1 1 1 1 2 (passing row)
-     */
     private boolean checkRows() {
+        /*
+         * Example:
+         * 0 1 2 3 4 5 6 (indices)
+         * 1 1 1 2 1 1 1 (failing row)
+         * 1 2 1 1 1 1 2 (passing row)
+         */
         int winning_threshold = 4;
         ArrayList<int[]> sequence = new ArrayList<>();
         // starts at bottom-left, works across and up
@@ -349,19 +370,21 @@ public class Game {
     private boolean checkDiagonals() {
         // check bottom-left 3rows x 4cols for forward diagonals /
         // check bottom-right 3rows x 4cols for backward diagonals \
-        return checkForwardDiagonals() || checkBackwardDiagonals();
+        boolean forwardDiagonalHasSequence = checkForwardDiagonals();
+        boolean backwardDiagonalHasSequence = checkBackwardDiagonals();
+        return forwardDiagonalHasSequence || backwardDiagonalHasSequence;
     }
-    /**
-     * forward diagonals
-     *   0 1 2 3 4 5 6
-     * 0 # # # # # # #
-     * 1 # # # # # # #
-     * 2 # # # # # # #
-     * 3 $ $ $ $ # # #
-     * 4 $ $ $ $ # # #
-     * 5 $ $ $ $ # # #
-     */
     private boolean checkForwardDiagonals() {
+        /*
+         * forward diagonals
+         *   0 1 2 3 4 5 6
+         * 0 # # # # # # #
+         * 1 # # # # # # #
+         * 2 # # # # # # #
+         * 3 $ $ $ $ # # #
+         * 4 $ $ $ $ # # #
+         * 5 $ $ $ $ # # #
+         */
         int limit = 3; // bound of winnable area
         ArrayList<int[]> sequence = new ArrayList<>();
         for (int row = ROWS - 1; row >= 3; row--) {
@@ -402,17 +425,17 @@ public class Game {
         }
         return false;
     }
-    /**
-     * backward diagonals
-     *   0 1 2 3 4 5 6
-     * 0 # # # # # # #
-     * 1 # # # # # # #
-     * 2 # # # # # # #
-     * 3 # # # $ $ $ $
-     * 4 # # # $ $ $ $
-     * 5 # # # $ $ $ $
-     */
     private boolean checkBackwardDiagonals() {
+        /*
+         * backward diagonals
+         *   0 1 2 3 4 5 6
+         * 0 # # # # # # #
+         * 1 # # # # # # #
+         * 2 # # # # # # #
+         * 3 # # # $ $ $ $
+         * 4 # # # $ $ $ $
+         * 5 # # # $ $ $ $
+         */
         int limit = 3; // bound of winnable area
         ArrayList<int[]> sequence = new ArrayList<>();
         for (int row = ROWS - 1; row >= 3; row--) {
@@ -454,7 +477,7 @@ public class Game {
         return false;
     }
 
-    /**
+    /*
      * determines whether any possible ways
      * to win still exist
      */
@@ -607,25 +630,11 @@ public class Game {
         return true;
     }
 
-    // prints the board
-    public void printBoard() {
-        String columnHeader = "    0 1 2 3 4 5 6";
-        String headerDivider = "-----------------";
-        System.out.println(columnHeader);
-        System.out.println(headerDivider);
-        for (int row = 0; row < ROWS; row++) {
-            String board = String.valueOf(row) + " | ";
-            for (int column = 0; column < COLUMNS; column++) {
-                board += String.valueOf(this.board[row][column]) + " ";
-            }
-            System.out.println(board);
-        }
-    }
-
     // interface specification
     public interface GameListener {
         void onMyMoveProcessed(int row, int column);
         void onGameTied();
         void onGameWon(ArrayList<int[][]> winningSequences);
     }
+
 }

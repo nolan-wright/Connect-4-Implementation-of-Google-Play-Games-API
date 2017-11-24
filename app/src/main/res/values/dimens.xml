@@ -18,7 +18,18 @@
     <dimen name="chat_message_text_size">18sp</dimen>
     <dimen name="chat_message_topbottom_margin">8dp</dimen>
     <dimen name="chat_message_side_margin">4dp</dimen>
-    <dimen name="chat_notification_badge_size">16dp</dimen>
+    <dimen name="chat_notification_badge_size">12dp</dimen>
     <dimen name="chat_notification_badge_margin">2dp</dimen>
     <dimen name="cell_padding">8dp</dimen>
+    <dimen name="winning_chip_padding">8dp</dimen>
+    <dimen name="chip_stroke_width">4dp</dimen>
+    <dimen name="winning_chip_border_padding">48dp</dimen>
+    <dimen name="animated_chips_size">35dp</dimen>
+    <dimen name="animated_text_size">36sp</dimen>
+    <dimen name="buttons_container_paddingTop">48dp</dimen>
+    <dimen name="textview_vs_margin">8dp</dimen>
+    <dimen name="bot_difficulty_label_textSize">24sp</dimen>
+    <dimen name="bot_difficulty_seekbar_margin_bottom">36dp</dimen>
+    <dimen name="bot_difficulty_seekbar_labels_margin_top">48dp</dimen>
+    <dimen name="bot_difficulty_seekbar_width">256dp</dimen>
 </resources>

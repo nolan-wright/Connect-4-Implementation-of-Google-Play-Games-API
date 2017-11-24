@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.games.AchievementsClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.InvitationsClient;
 import com.google.android.gms.games.RealTimeMultiplayerClient;
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     final String TAG = "MainActivity";
 
     // request code constants
-    final static int RC_INVITATION_INBOX = 0;
+    private final static int RC_INVITATION_INBOX = 0;
+    private final static int RC_ACHIEVEMENTS = 1;
 
     // name constants
     public static final String GAME_TYPE = "gameType";
@@ -107,6 +109,22 @@ public class MainActivity extends AppCompatActivity {
                         startActivityForResult(intent, RC_INVITATION_INBOX);
                     }
                 });
+    }
+    // view achievements button
+    public void viewAchievements(View v) {
+        AchievementsClient client = Games.getAchievementsClient(this,
+                GoogleSignIn.getLastSignedInAccount(this));
+        client.getAchievementsIntent().addOnSuccessListener(new OnSuccessListener<Intent>() {
+            @Override
+            public void onSuccess(Intent intent) {
+                startActivityForResult(intent, RC_ACHIEVEMENTS);
+            }
+        });
+    }
+    // play computer button
+    public void playComputer(View v) {
+        Intent intent = new Intent(this, PlayBotActivity.class);
+        startActivity(intent);
     }
 
     /**

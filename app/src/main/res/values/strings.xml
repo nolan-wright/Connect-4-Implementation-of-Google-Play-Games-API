@@ -16,4 +16,19 @@
     <string name="snackbar_action_text">JOIN</string>
     <string name="chat_button_text">SEND</string>
     <string name="compose_message_hint">Enter message</string>
+    <string name="button_new_game_text">NEW GAME</string>
+    <string name="button_invite_friend_text">INVITE FRIEND</string>
+    <string name="button_view_invitations_text">VIEW INVITATIONS</string>
+    <string name="button_view_achievements_text">VIEW ACHIEVEMENTS</string>
+    <string name="animated_text_red">RED</string>
+    <string name="animated_text_vs">VS</string>
+    <string name="animated_text_green">GREEN</string>
+    <string name="button_play_computer">PLAY COMPUTER</string>
+    <string name="player2_label_computer">Computer</string>
+    <string name="player1_label_player">Player</string>
+    <string name="bot_difficulty_label_text">Computer Difficulty</string>
+    <string name="bot_difficulty_button_text">PLAY</string>
+    <string name="bot_difficulty_1">1</string>
+    <string name="bot_difficulty_2">2</string>
+    <string name="bot_difficulty_3">3</string>
 </resources>

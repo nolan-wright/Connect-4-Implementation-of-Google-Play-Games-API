@@ -6,6 +6,6 @@
     <solid android:color="@color/colorRed" />
     <stroke
         android:color="@color/colorDarkRed"
-        android:width="4dp"/>
+        android:width="@dimen/chip_stroke_width"/>
 
 </shape>

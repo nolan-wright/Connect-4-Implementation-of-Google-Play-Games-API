@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Google Play game services IDs.
+Save this file as res/values/games-ids.xml in your project.
+-->
 <resources>
-    <string name="app_id">1094277331915</string>
+    <!-- app_id -->
+    <string name="app_id" translatable="false">1094277331915</string>
+    <!-- package_name -->
+    <string name="package_name" translatable="false">com.purduegmail.mobileapps.project_v3</string>
+    <!-- achievement Master Tiger -->
+    <string name="achievement_master_tiger" translatable="false">CgkIy_eLwOwfEAIQAg</string>
+    <!-- achievement Expert Lion -->
+    <string name="achievement_expert_lion" translatable="false">CgkIy_eLwOwfEAIQAw</string>
 </resources>
