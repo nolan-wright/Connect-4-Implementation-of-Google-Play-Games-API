@@ -16,7 +16,8 @@
     <dimen name="chat_message_padding_topbottom">8dp</dimen>
     <dimen name="chat_message_padding_sides">16dp</dimen>
     <dimen name="chat_message_text_size">18sp</dimen>
-    <dimen name="chat_message_topbottom_margin">8dp</dimen>
+    <dimen name="chat_message_marginTop">4dp</dimen>
+    <dimen name="chat_view_marginBottom">8dp</dimen>
     <dimen name="chat_message_side_margin">4dp</dimen>
     <dimen name="chat_notification_badge_size">12dp</dimen>
     <dimen name="chat_notification_badge_margin">2dp</dimen>
@@ -32,4 +33,6 @@
     <dimen name="bot_difficulty_seekbar_margin_bottom">36dp</dimen>
     <dimen name="bot_difficulty_seekbar_labels_margin_top">48dp</dimen>
     <dimen name="bot_difficulty_seekbar_width">256dp</dimen>
+    <dimen name="bot_difficulty_seekbar_labels_width">224dp</dimen>
+    <dimen name="signed_in_tag_marginEnd">8dp</dimen>
 </resources>

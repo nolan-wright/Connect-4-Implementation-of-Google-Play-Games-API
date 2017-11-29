@@ -15,7 +15,7 @@
         android:id="@+id/bot_difficulty_labels"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/bot_difficulty"
-        android:layout_width="@dimen/bot_difficulty_seekbar_width"
+        android:layout_width="@dimen/bot_difficulty_seekbar_labels_width"
         android:layout_height="wrap_content">
         <TextView
             android:layout_weight="1"

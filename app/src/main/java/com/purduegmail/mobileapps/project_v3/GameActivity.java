@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.AchievementsClient;
 import com.google.android.gms.games.Games;
@@ -49,11 +50,13 @@ public class GameActivity extends AppCompatActivity
     // request code constants
     private final static int RC_SELECT_PLAYERS = 0;
     private final static int RC_WAITING_FOR_PLAYERS = 1;
+    private final static int RC_CHAT = 2;
 
     // name constants
     public final static String MESSAGES = "chat-history";
     public final static String MESSAGE_RECEIVED = "message-received";
     public final static String MESSAGE_RECEIVED_EVENT = "message-received-event";
+    public final static String GAME_STATUS = "game-status";
 
     // status constants
     private final static int MATCH_ACTIVE = 0;
@@ -81,7 +84,6 @@ public class GameActivity extends AppCompatActivity
             fragment.highlightSequences(winningSequences, Game.MY_MARKER);
             showInformationalDialog(getResources().getString(R.string.dialog_message_won),
                     getResources().getString(R.string.dialog_title_completed));
-            checkForAchievements();
             // send message to opponent
             byte[] data = {(byte)MATCH_DECIDED, (byte)row, (byte)column};
             client.sendReliableMessage(data, room.getRoomId(), opponentParticipantId,
@@ -91,6 +93,7 @@ public class GameActivity extends AppCompatActivity
                             Log.i(TAG, "Message sent, match won");
                         }
                     });
+            checkForAchievements();
         }
         else if (hasTied) {
             showInformationalDialog(getResources().getString(R.string.dialog_message_tie),
@@ -127,13 +130,13 @@ public class GameActivity extends AppCompatActivity
     }
 
     private RealTimeMultiplayerClient client; // talks to google play services
-    private RoomConfig config; // describes the room, so that is can be created/joined
+    private RoomConfig config; // describes the room, so that it can be created/joined
     private String myParticipantId;
     private String opponentParticipantId;
     private boolean goesFirst;
-    private Room room; // provides connection between participants
+    private Room room; // provides connectivity between participants
     private Game game; // connect 4 game logic
-    private GameFragment fragment; // connect 4 game display
+    private GameFragment fragment; // game display... the big, blue square with white holes
     private ArrayList<int[][]> winningSequences;
     private boolean hasWon = false;
     private boolean hasTied = false;
@@ -209,6 +212,23 @@ public class GameActivity extends AppCompatActivity
                 }
                 Log.i(TAG, "Done waiting for players");
                 break;
+            case RC_CHAT:
+                if (resultCode == ChatActivity.INVITATION_ACCEPTED) {
+                    // go to invitation
+                    String invitationId = data.getStringExtra(MainActivity.INVITATION_ID);
+                    if (gameIsOngoing) {
+                        showConfirmForfeitureDialog(invitationId);
+                    }
+                    else {
+                        client.leave(config, room.getRoomId()); // leave the room
+                        // prepare intent
+                        Intent intent = new Intent(GameActivity.this, GameActivity.class);
+                        intent.putExtra(MainActivity.GAME_TYPE, MainActivity.TYPE_JOIN_INVITATION);
+                        intent.putExtra(MainActivity.INVITATION_ID, invitationId);
+                        finish(); // close this activity
+                        startActivity(intent); // start new activity
+                    }
+                }
         }
     }
     @Override
@@ -220,7 +240,7 @@ public class GameActivity extends AppCompatActivity
         }
     }
 
-    /**
+    /*
      * nested classes
      */
     // used in RoomConfig builder
@@ -290,7 +310,7 @@ public class GameActivity extends AppCompatActivity
                     broadcastMessage(chatMessage);
                     messages.add(new ChatMessage(chatMessage, false));
                     if (isInFocus) {
-                        showChatNotificationBadge();
+                        showChatNotification();
                     }
                     break;
             }
@@ -366,15 +386,16 @@ public class GameActivity extends AppCompatActivity
         }
     }
 
-    /**
+    /*
      * onClick methods
      */
     // chat button
     public void chat(View v) {
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra(MESSAGES, messages);
-        dismissChatNotificationBadge();
-        startActivity(intent);
+        intent.putExtra(GAME_STATUS, gameIsOngoing);
+        dismissChatNotification();
+        startActivityForResult(intent, RC_CHAT);
     }
     // exit button
     public void exit(View v) {
@@ -387,32 +408,37 @@ public class GameActivity extends AppCompatActivity
         showConfirmForfeitureDialog();
     }
 
-    /**
+    /*
      * helper methods
      */
     // called in onMyMoveProcessed
     private void checkForAchievements() {
-        AchievementsClient client = Games.getAchievementsClient(this,
-                GoogleSignIn.getLastSignedInAccount(this));
-        if (winningSequences.size() > 1) {
-            client.unlock(getString(R.string.achievement_master_tiger));
-        }
-        for (int[][] sequence : winningSequences) {
-            if (sequence.length > 4) {
-                client.unlock(getString(R.string.achievement_expert_lion));
-                return;
-            }
-        }
+        Games.getGamesClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .setViewForPopups(findViewById(android.R.id.content))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        AchievementsClient client = Games.getAchievementsClient(GameActivity.this,
+                                GoogleSignIn.getLastSignedInAccount(GameActivity.this));
+                        if (winningSequences.size() > 1) {
+                            client.unlock(getString(R.string.achievement_master_tiger));
+                        }
+                        for (int[][] sequence : winningSequences) {
+                            if (sequence.length > 4) {
+                                client.unlock(getString(R.string.achievement_expert_lion));
+                                return;
+                            }
+                        }
+                    }
+                });
     }
     // called in MessageReceivedHandler.onRealTimeMessageReceived
-    private void showChatNotificationBadge() {
-        View badge = findViewById(R.id.chat_notification_badge);
-        badge.setVisibility(View.VISIBLE);
+    private void showChatNotification() {
+        ((ImageView)findViewById(R.id.ib_chat)).setImageResource(R.drawable.chat_messages_received);
     }
     // called in chat
-    private void dismissChatNotificationBadge() {
-        View badge = findViewById(R.id.chat_notification_badge);
-        badge.setVisibility(View.GONE);
+    private void dismissChatNotification() {
+        ((ImageView)findViewById(R.id.ib_chat)).setImageResource(R.drawable.chat);
     }
     // called in MessageReceivedHandler.onRealTimeMessageReceived
     private void broadcastMessage(String message) {
@@ -438,7 +464,7 @@ public class GameActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view) {
                         if (gameIsOngoing) {
-                            showConfirmForfeitureDialog(invitation);
+                            showConfirmForfeitureDialog(invitation.getInvitationId());
                         }
                         else {
                             client.leave(config, room.getRoomId()); // leave the room
@@ -469,7 +495,7 @@ public class GameActivity extends AppCompatActivity
         dialog.show();
     }
     // called in showInvitationSnackbar
-    private void showConfirmForfeitureDialog(final Invitation invitation) {
+    private void showConfirmForfeitureDialog(final String invitationId) {
         AlertDialog dialog = new AlertDialog.Builder(this).create();
         dialog.setTitle(getResources().getString(R.string.dialog_title_confirmation));
         dialog.setMessage(getResources().getString(R.string.dialog_message_forfeit));
@@ -488,7 +514,7 @@ public class GameActivity extends AppCompatActivity
                         // prepare intent
                         Intent intent = new Intent(GameActivity.this, GameActivity.class);
                         intent.putExtra(MainActivity.GAME_TYPE, MainActivity.TYPE_JOIN_INVITATION);
-                        intent.putExtra(MainActivity.INVITATION_ID, invitation.getInvitationId());
+                        intent.putExtra(MainActivity.INVITATION_ID, invitationId);
                         finish(); // close this activity
                         startActivity(intent); // start new activity
                     }

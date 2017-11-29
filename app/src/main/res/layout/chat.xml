@@ -3,6 +3,10 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <ListView
+        android:layout_marginTop="@dimen/chat_message_marginTop"
+        android:layout_marginBottom="@dimen/chat_view_marginBottom"
+        android:layout_marginStart="@dimen/chat_message_side_margin"
+        android:layout_marginEnd="@dimen/chat_message_side_margin"
         android:transcriptMode="alwaysScroll"
         android:divider="@null"
         android:id="@+id/chatView"
@@ -38,6 +42,7 @@
             android:layout_height="wrap_content" />
 
         <Button
+            android:layout_gravity="center"
             android:onClick="send"
             android:text="@string/chat_button_text"
             android:background="?attr/selectableItemBackground"

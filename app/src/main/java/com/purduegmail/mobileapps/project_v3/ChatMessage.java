@@ -31,8 +31,7 @@ public class ChatMessage implements Parcelable {
             return new ChatMessage[size];
         }
         public ChatMessage createFromParcel(Parcel in) {
-            return new ChatMessage(in);
-        }};
+            return new ChatMessage(in);}};
 
     private String message;
     public String getMessage() {
@@ -40,16 +39,16 @@ public class ChatMessage implements Parcelable {
     }
 
     private boolean wasSent; // whether the message was sent or received
-    public Boolean wasSent() {
+    Boolean wasSent() {
         return wasSent;
     }
 
     // constructors
-    public ChatMessage(String msg, boolean messageWasSentRatherThanReceived) {
+    ChatMessage(String msg, boolean messageWasSentRatherThanReceived) {
         message = msg;
         wasSent = messageWasSentRatherThanReceived;
     }
-    public ChatMessage(Parcel in) {
+    ChatMessage(Parcel in) {
         message = in.readString();
         int wasSentFlag = in.readInt();
         if (wasSentFlag == MESSAGE_WAS_SENT) {

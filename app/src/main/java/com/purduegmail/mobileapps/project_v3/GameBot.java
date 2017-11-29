@@ -1,5 +1,7 @@
 package com.purduegmail.mobileapps.project_v3;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -7,11 +9,12 @@ import java.util.Collections;
  * Created by Nolan Wright on 11/20/2017.
  */
 
-public class GameBot {
+class GameBot {
 
     // marker constants
+    // TODO: make below private after testing
     public final static int HUMAN_MARKER = 1;
-    public final static int COMPUTER_MARKER = 2;
+    private final static int COMPUTER_MARKER = 2;
     // cell field label constants
     private final static int CELL_ROW = 0;
     private final static int CELL_COLUMN = 1;
@@ -28,7 +31,7 @@ public class GameBot {
     private int depth; // must be an even integer >= 1
 
     // constructor
-    public GameBot(int difficulty) throws BadDepthException {
+    GameBot(int difficulty) throws BadDepthException {
         // difficulty == depth of tree
         if (difficulty <= 0 || (difficulty % 2 != 0 && difficulty != 1)) {
             throw new BadDepthException();
@@ -36,7 +39,12 @@ public class GameBot {
         depth = difficulty;
     }
 
-    public int[] move(int[][] state) {
+    /*
+     * returns array in format: {row, column},
+     * where the row, column coordinate represent
+     * the computer's intended move
+     */
+    int[] move(int[][] state) {
         // returns column that bot has selected as its move
         Node root = buildTree(state, depth, COMPUTER_MARKER, null, null);
         Node bottomNode = minimax(root, LEVEL_COMPUTER_MAXIMIZES);
@@ -91,7 +99,8 @@ public class GameBot {
     /*
      * helper functions for buildTree
      */
-    private int[][] copyState(int[][] state) {
+    // TODO: make below private after testing
+    public int[][] copyState(int[][] state) {
         int[][] copiedState = new int[state.length][];
         for (int i = 0; i < state.length; i++) {
             int[] row = state[i];
@@ -364,7 +373,8 @@ public class GameBot {
                 if (precedingCell != null && precedingCell[CELL_VALUE] == Game.NULL_MARKER) {
                     // preceding cell is empty
                     precedingCellIsEmpty = true;
-                    if (cellIsAccessible(precedingCell[CELL_ROW], precedingCell[CELL_COLUMN], state)) {
+                    if (cellIsAccessible(precedingCell[CELL_ROW],
+                            precedingCell[CELL_COLUMN], state)) {
                         precedingCellIsAccessible = true;
                     }
                 }
@@ -426,13 +436,14 @@ public class GameBot {
                     points += 3;
                 }
                 if (precedingCellIsAccessible || terminatingCellIsAccessible) {
-                    points += 5;
+                    points += 3;
                 }
             }
         }
         return points;
     }
-    private int getNumberOfPossibleWinningDirections(int row, int column, int[][] state, int marker) {
+    private int getNumberOfPossibleWinningDirections(
+            int row, int column, int[][] state, int marker) {
         int numberOfPossibleWinningDirections = 0;
         // going left
         int count = 0;
@@ -669,7 +680,7 @@ public class GameBot {
         }
     }
 
-    /**
+    /*
      * nested classes
      */
     private class BadDepthException extends RuntimeException {
@@ -680,11 +691,11 @@ public class GameBot {
     private class Node implements Comparable<Node> {
 
         // score constants
-        public static final int COMPUTER_SCORE = 0;
-        public static final int HUMAN_SCORE = 1;
+        static final int COMPUTER_SCORE = 0;
+        static final int HUMAN_SCORE = 1;
 
         @Override
-        public int compareTo(Node other) {
+        public int compareTo(@NonNull Node other) {
             // return -1 if this < other, 1 if this > other
             int this_differential = getDifferential();
             int other_differential = other.getDifferential();
@@ -699,7 +710,7 @@ public class GameBot {
         int whoseMove; // the marker that this node will use to make its move
 
         // constructor
-        public Node(int[][] data) {
+        Node(int[][] data) {
             this.data = data;
             children = new ArrayList<>();
         }
@@ -716,7 +727,7 @@ public class GameBot {
                         return -EVALUATION_WIN_IN_ONE;
                     }
                     else {
-                        return EVALUATION_WIN_IN_ONE;
+                        return EVALUATION_WIN_IN_TWO;
                     }
                 }
                 // computer is not in a high-priority situation
@@ -754,10 +765,10 @@ public class GameBot {
     }
 
     // TODO: remove below after accomplishing
-    // add padding to listview parent in chat xml, remove margin from chat bubble
-    // test achievements with new code
-    // add invitations listener to chat activity and play bot activity
-    // investigate getLosingSequences method for bugs
+    // tweak evaluation so that it favors sequences that will become accessible earlier
+    // is cell evaluation necessary?
+    // only give connection points for connections that can win
+    // or give more points for markers in a winnable sequence
 
     // TODO: remove below after testing
     private void printNode(Node n) {

@@ -4,7 +4,10 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +17,16 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.SignInAccount;
+import com.google.android.gms.games.Games;
+import com.google.android.gms.games.InvitationsClient;
 import com.google.android.gms.games.RealTimeMultiplayerClient;
+import com.google.android.gms.games.multiplayer.Invitation;
+import com.google.android.gms.games.multiplayer.InvitationCallback;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -24,6 +36,8 @@ import java.util.concurrent.Future;
 
 public class PlayBotActivity extends AppCompatActivity
     implements GameFragment.GameFragmentListener, Game.GameListener {
+
+    final String TAG = "PlayBotActivity";
 
     // implementation of GameFragmentListener
     public void onColumnClicked(int column) {
@@ -47,6 +61,7 @@ public class PlayBotActivity extends AppCompatActivity
                     getResources().getString(R.string.dialog_title_completed));
         }
         else {
+            showSpinner();
             new BotThread().execute();
         }
     }
@@ -70,6 +85,16 @@ public class PlayBotActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.difficulty_selection);
         displayCustomActionBar();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // get user's sign in account
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) { // player is signed in
+            InvitationsClient client = Games.getInvitationsClient(this, account);
+            client.registerInvitationCallback(new PlayBotActivity.InvitationHandler());
+        }
     }
 
     /*
@@ -97,6 +122,17 @@ public class PlayBotActivity extends AppCompatActivity
     /*
      * nested class
      */
+    class InvitationHandler extends InvitationCallback {
+        @Override
+        public void onInvitationReceived(@NonNull Invitation invitation) {
+            Log.i(TAG, "Invitation received");
+            showInvitationSnackbar(invitation);
+        }
+        @Override
+        public void onInvitationRemoved(@NonNull String s) {
+            Log.i(TAG, "Invitation removed");
+        }
+    }
     private class BotThread extends AsyncTask<Void, Void, int[]> {
         @Override
         protected int[] doInBackground(Void... arg0) {
@@ -111,6 +147,32 @@ public class PlayBotActivity extends AppCompatActivity
     /*
      * helper methods
      */
+    // called in InvitationHandler.onInvitationReceived
+    private void showInvitationSnackbar(final Invitation invitation) {
+        View content = findViewById(android.R.id.content);
+        String snackbar_message = invitation.getInviter().getDisplayName() + " "
+                + getResources().getString(R.string.snackbar_text);
+        Snackbar.make(content, snackbar_message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_action_text, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // prepare intent
+                        Intent intent = new Intent(PlayBotActivity.this, GameActivity.class);
+                        intent.putExtra(MainActivity.GAME_TYPE, MainActivity.TYPE_JOIN_INVITATION);
+                        intent.putExtra(MainActivity.INVITATION_ID, invitation.getInvitationId());
+                        startActivity(intent); // start new activity
+                    }
+                })
+                .show();
+    }
+    // called in onMyMoveProcessed
+    private void showSpinner() {
+        findViewById(R.id.progressBar_Player2).setVisibility(View.VISIBLE);
+    }
+    // called in makeBotMove
+    private void dismissSpinner() {
+        findViewById(R.id.progressBar_Player2).setVisibility(View.GONE);
+    }
     // called in play
     private void initializeGameplayUI() {
         setContentView(R.layout.activity_game);
@@ -145,6 +207,7 @@ public class PlayBotActivity extends AppCompatActivity
     }
     // called in BotThread.onPostExecute
     private void makeBotMove(int[] botMove) {
+        dismissSpinner();
         fragment.drawUpdate(botMove[0], botMove[1], Game.OPPONENT_MARKER);
         game.processOpponentMove(botMove[0], botMove[1]);
         ArrayList<int[][]> losingSequences = game.getLosingSequences();

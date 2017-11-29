@@ -117,7 +117,7 @@ public class GameFragment extends Fragment {
         columns[6].setClickable(clickable);
     }
 
-    /**
+    /*
      * helper methods
      */
     // called in onCreate
@@ -196,7 +196,7 @@ public class GameFragment extends Fragment {
         cellMap.append(5, row5);
     }
 
-    /**
+    /*
      * interface specification
      */
     public interface GameFragmentListener {

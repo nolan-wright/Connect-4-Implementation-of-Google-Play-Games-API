@@ -6,28 +6,13 @@ import java.util.ArrayList;
  * Created by Nolan Wright on 11/12/2017.
  */
 
-public class Game {
+class Game {
 
-    /**
-     * Number of rows
-     */
-    public static final int ROWS = 6;
-    /**
-     * Number of columns
-     */
-    public static final int COLUMNS = 7;
-    /**
-     * MY_MARKER is the chip placed for my moves
-     */
-    public static final int MY_MARKER = 1;
-    /**
-     * OPPONENT_MARKER is the chip placed for the opponent moves
-     */
-    public static final int OPPONENT_MARKER = 2;
-    /**
-     * NULL_MARKER means nothing has been placed there
-     */
-    public static final int NULL_MARKER = 0;
+    static final int ROWS = 6; // the number of rows
+    static final int COLUMNS = 7; // the number of columns
+    static final int MY_MARKER = 1; // represents a cell with my marker
+    static final int OPPONENT_MARKER = 2; // represents a cell with the opponent's marker
+    static final int NULL_MARKER = 0; // represents a cell with no marker
 
     private GameListener listener;
     /*
@@ -42,8 +27,12 @@ public class Game {
      * # # # # # # #
      */
     private int[][] board;
-    public int[][] getBoard() {
+    int[][] getBoard() {
         return board;
+    }
+    // TODO: remove below after testing
+    void setBoard(int[][] b) {
+        board = b;
     }
     /*
      * it is possible to have more than one winning sequence
@@ -53,7 +42,7 @@ public class Game {
     private ArrayList<int[][]> winningSequences;
 
     // constructor
-    public Game(GameListener listener) {
+    Game(GameListener listener) {
         winningSequences = new ArrayList<>();
         this.listener = listener;
         board = generateNewBoard();
@@ -73,13 +62,13 @@ public class Game {
         return newBoard;
     }
 
-    /**
-     * input column that player has selected for their move,
+    /*
+     * mark column that player has selected for his move,
      * notifies listener of {row, column} coordinate where the
      * move will fall, also notifies listener if win condition
      * has been met or catscratch (tie) has occurred
      */
-    public void processMyMove(int column) {
+    void processMyMove(int column) {
         int row = ROWS - 1;
         while (row >= 0) {
             if (board[row][column] == NULL_MARKER) {
@@ -101,23 +90,25 @@ public class Game {
             }
         }
     }
-    /**
+    /*
      * simply applies the opponent's marker to specified cell
      */
-    public void processOpponentMove(int row, int column) {
+    void processOpponentMove(int row, int column) {
         board[row][column] = OPPONENT_MARKER;
     }
 
-    /**
+    /*
      * returns the losing sequences for this board
      */
-    public ArrayList<int[][]> getLosingSequences() {
+    ArrayList<int[][]> getLosingSequences() {
         ArrayList<int[][]> losingSequences = new ArrayList<>();
-        if (getLosingColumns() != null) {
-            losingSequences.add(getLosingColumns());
+        int[][] columns;
+        if ((columns = getLosingColumns()) != null) {
+            losingSequences.add(columns);
         }
-        if (getLosingRows() != null) {
-            losingSequences.add(getLosingRows());
+        int[][] rows;
+        if ((rows = getLosingRows()) != null) {
+            losingSequences.add(rows);
         }
         losingSequences.addAll(getLosingDiagonals());
         return losingSequences;
@@ -187,11 +178,13 @@ public class Game {
     }
     private ArrayList<int[][]> getLosingDiagonals() {
         ArrayList<int[][]> losingDiagonals = new ArrayList<>();
-        if (getLosingForwardDiagonals() != null) {
-            losingDiagonals.add(getLosingForwardDiagonals());
+        int[][] forward;
+        if ((forward = getLosingForwardDiagonals()) != null) {
+            losingDiagonals.add(forward);
         }
-        if (getLosingBackwardDiagonals() != null) {
-            losingDiagonals.add(getLosingBackwardDiagonals());
+        int[][] backward;
+        if ((backward = getLosingBackwardDiagonals()) != null) {
+            losingDiagonals.add(backward);
         }
         return losingDiagonals;
     }
@@ -227,6 +220,14 @@ public class Game {
                             }
                         }
                     }
+                }
+                // before shifting right, check sequence size again
+                if (sequence.size() >= 4) {
+                    // losing sequence
+                    // only one forward diagonal per turn can have a losing sequence
+                    int[][] sequenceArray = new int[sequence.size()][2];
+                    sequenceArray = sequence.toArray(sequenceArray);
+                    return sequenceArray;
                 }
             }
             // so that diagonals are not rechecked
@@ -266,6 +267,14 @@ public class Game {
                             }
                         }
                     }
+                }
+                // before shifting left, check sequence size again
+                if (sequence.size() >= 4) {
+                    // losing sequence
+                    // only one forward diagonal per turn can have a losing sequence
+                    int[][] sequenceArray = new int[sequence.size()][2];
+                    sequenceArray = sequence.toArray(sequenceArray);
+                    return sequenceArray;
                 }
             }
             // so that diagonals are not rechecked
@@ -419,6 +428,16 @@ public class Game {
                         }
                     }
                 }
+                // before shifting right, check sequence size again
+                if (sequence.size() >= 4) {
+                    // winning sequence
+                    // add to winning sequences
+                    int[][] sequenceArray = new int[sequence.size()][2];
+                    sequenceArray = sequence.toArray(sequenceArray);
+                    winningSequences.add(sequenceArray);
+                    // only one forward diagonal per turn can have a winning sequence
+                    return true;
+                }
             }
             // so that diagonals are not rechecked
             limit = 0;
@@ -469,6 +488,16 @@ public class Game {
                             }
                         }
                     }
+                }
+                // before shifting left, check sequence size again
+                if (sequence.size() >= 4) {
+                    // winning sequence
+                    // add to winning sequences
+                    int[][] sequenceArray = new int[sequence.size()][2];
+                    sequenceArray = sequence.toArray(sequenceArray);
+                    winningSequences.add(sequenceArray);
+                    // only one forward diagonal per turn can have a winning sequence
+                    return true;
                 }
             }
             // so that diagonals are not rechecked

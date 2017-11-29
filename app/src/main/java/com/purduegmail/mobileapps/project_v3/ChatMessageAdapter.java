@@ -24,7 +24,7 @@ public class ChatMessageAdapter extends BaseAdapter {
     private List<ChatMessage> data;
 
     // constructor
-    public ChatMessageAdapter(Context context, List<ChatMessage> messages) {
+    ChatMessageAdapter(Context context, List<ChatMessage> messages) {
         inflater = LayoutInflater.from(context);
         data = messages;
     }
@@ -88,7 +88,7 @@ public class ChatMessageAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    /**
+    /*
      * nested classes
      */
     private interface ChatMessageViewHolder {
@@ -96,25 +96,25 @@ public class ChatMessageAdapter extends BaseAdapter {
     }
     private class SentMessageHolder implements ChatMessageViewHolder {
 
-        private TextView messageView;
+        private WrapWidthTextView messageView;
 
         // constructor
-        public SentMessageHolder(View itemView) {
-            messageView = itemView.findViewById(R.id.tv_sentMessage);
+        SentMessageHolder(View itemView) {
+            messageView = itemView.findViewById(R.id.messageSent);
         }
 
-        public void bind(final ChatMessage message) {
+        public void bind(ChatMessage message) {
             messageView.setText(message.getMessage());
         }
 
     }
     private class ReceivedMessageHolder implements ChatMessageViewHolder {
 
-        private TextView messageView;
+        private WrapWidthTextView messageView;
 
         // constructor
-        public ReceivedMessageHolder(View itemView) {
-            messageView = itemView.findViewById(R.id.tv_receivedMessage);
+        ReceivedMessageHolder(View itemView) {
+            messageView = itemView.findViewById(R.id.messageReceived);
         }
 
         public void bind(ChatMessage message) {
