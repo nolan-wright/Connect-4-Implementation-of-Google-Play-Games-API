@@ -18,6 +18,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.games.AchievementsClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.InvitationsClient;
+import com.google.android.gms.games.LeaderboardsClient;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.InvitationCallback;
@@ -25,6 +26,8 @@ import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private final static int RC_INVITATION_INBOX = 0;
     private final static int RC_ACHIEVEMENTS = 1;
     private final static int RC_SIGN_IN = 2;
+    private final static int RC_LEADERBOARD = 3;
 
     // name constants
     public static final String GAME_TYPE = "game-type";
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     findViewById(R.id.button_player_select).setEnabled(false);
                     findViewById(R.id.button_view_invitations).setEnabled(false);
                     findViewById(R.id.button_view_achievements).setEnabled(false);
+                    findViewById(R.id.button_view_leaderboard).setEnabled(false);
                     findViewById(R.id.not_signed_in_container).setVisibility(View.VISIBLE);
                     findViewById(R.id.button_google_sign_in).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -128,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.button_player_select).setEnabled(true);
                 findViewById(R.id.button_view_invitations).setEnabled(true);
                 findViewById(R.id.button_view_achievements).setEnabled(true);
+                findViewById(R.id.button_view_leaderboard).setEnabled(true);
                 findViewById(R.id.not_signed_in_container).setVisibility(View.GONE);
             }
             catch (ApiException ex) {
@@ -172,6 +178,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, RC_ACHIEVEMENTS);
             }
         });
+    }
+    // view leaderboard button
+    public void viewLeaderboard(View v) {
+        LeaderboardsClient client = Games.getLeaderboardsClient(this,
+                GoogleSignIn.getLastSignedInAccount(this));
+        client.getLeaderboardIntent(getString(R.string.leaderboard_most_wins))
+                .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        startActivityForResult(intent, RC_LEADERBOARD);
+                    }
+                });
     }
     // play computer button
     public void playComputer(View v) {

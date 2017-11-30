@@ -26,6 +26,7 @@ import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.games.AchievementsClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.InvitationsClient;
+import com.google.android.gms.games.LeaderboardsClient;
 import com.google.android.gms.games.RealTimeMultiplayerClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.InvitationCallback;
@@ -36,6 +37,11 @@ import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateCallback;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -93,6 +99,9 @@ public class GameActivity extends AppCompatActivity
                             Log.i(TAG, "Message sent, match won");
                         }
                     });
+            // leaderboard logic
+            updatePlayerWins();
+            // achievements logic
             checkForAchievements();
         }
         else if (hasTied) {
@@ -131,6 +140,7 @@ public class GameActivity extends AppCompatActivity
 
     private RealTimeMultiplayerClient client; // talks to google play services
     private RoomConfig config; // describes the room, so that it can be created/joined
+    private String myPlayerId; // "primary key" for "users" reference in database
     private String myParticipantId;
     private String opponentParticipantId;
     private boolean goesFirst;
@@ -411,6 +421,33 @@ public class GameActivity extends AppCompatActivity
     /*
      * helper methods
      */
+    // called in updatePlayerWins
+    private void updateLeaderboard(int wins) {
+        LeaderboardsClient client = Games.getLeaderboardsClient(this,
+                GoogleSignIn.getLastSignedInAccount(this));
+        client.submitScore(getString(R.string.leaderboard_most_wins), wins + 1);
+    }
+    // called in onMyMoveProcessed
+    private void updatePlayerWins() {
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("users").child(myPlayerId).child("wins")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Integer wins = dataSnapshot.getValue(Integer.class);
+                if (wins == null) { // this is the player's first win
+                    wins = 0;
+                }
+                updateLeaderboard(wins);
+                ref.child("users").child(myPlayerId).child("wins")
+                        .setValue(wins + 1);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i(TAG, "Error reading from database", databaseError.toException());
+            }
+        });
+    }
     // called in onMyMoveProcessed
     private void checkForAchievements() {
         Games.getGamesClient(this, GoogleSignIn.getLastSignedInAccount(this))
@@ -428,8 +465,7 @@ public class GameActivity extends AppCompatActivity
                                 client.unlock(getString(R.string.achievement_expert_lion));
                                 return;
                             }
-                        }
-                    }
+                        }}
                 });
     }
     // called in MessageReceivedHandler.onRealTimeMessageReceived
@@ -574,6 +610,7 @@ public class GameActivity extends AppCompatActivity
                 .getCurrentPlayerId().addOnSuccessListener(new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String playerId) {
+                myPlayerId = playerId;
                 // establish participant ids
                 myParticipantId = room.getParticipantId(playerId);
                 int index = room.getParticipantIds().indexOf(myParticipantId);

@@ -35,4 +35,7 @@
     <dimen name="bot_difficulty_seekbar_width">256dp</dimen>
     <dimen name="bot_difficulty_seekbar_labels_width">224dp</dimen>
     <dimen name="signed_in_tag_marginEnd">8dp</dimen>
+    <dimen name="computer_goes_first_switch_label_textsize">18sp</dimen>
+    <dimen name="computer_goes_first_switch_label_marginEnd">24dp</dimen>
+    <dimen name="bot_difficulty_button_marginTop">36dp</dimen>
 </resources>

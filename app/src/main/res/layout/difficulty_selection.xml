@@ -47,11 +47,30 @@
         android:layout_width="@dimen/bot_difficulty_seekbar_width"
         android:layout_height="wrap_content" />
 
+    <LinearLayout
+        android:id="@+id/switch_container"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/bot_difficulty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginEnd="@dimen/computer_goes_first_switch_label_marginEnd"
+            android:textSize="@dimen/computer_goes_first_switch_label_textsize"
+            android:text="@string/computer_goes_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Switch
+            android:id="@+id/switch_who_goes_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <Button
+        android:layout_marginTop="@dimen/bot_difficulty_button_marginTop"
         android:onClick="play"
         android:text="@string/bot_difficulty_button_text"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/bot_difficulty"
+        android:layout_below="@+id/switch_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

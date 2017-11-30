@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -44,7 +45,11 @@ public class PlayBotActivity extends AppCompatActivity
         game.processMyMove(column);
     }
     public void onFragmentInflated() {
-        // do nothing
+        if (botGoesFirst) {
+            fragment.setColumnsClickable(false);
+            showSpinner();
+            new BotThread().execute();
+        }
     }
 
     // implementation of GameListener
@@ -76,9 +81,10 @@ public class PlayBotActivity extends AppCompatActivity
     private Game game;
     private GameFragment fragment;
     private GameBot bot;
+    private boolean botGoesFirst = false;
     private ArrayList<int[][]> winningSequences;
-    boolean hasWon = false;
-    boolean hasTied = false;
+    private boolean hasWon = false;
+    private boolean hasTied = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +119,7 @@ public class PlayBotActivity extends AppCompatActivity
             bot_difficulty = 6;
         }
         bot = new GameBot(bot_difficulty);
+        botGoesFirst = ((Switch)findViewById(R.id.switch_who_goes_first)).isChecked();
         initializeGameplayUI();
     }
     public void exit(View v) {

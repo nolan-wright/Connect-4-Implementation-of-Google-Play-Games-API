@@ -12,4 +12,6 @@ Save this file as res/values/games-ids.xml in your project.
     <string name="achievement_master_tiger" translatable="false">CgkIy_eLwOwfEAIQAg</string>
     <!-- achievement Expert Lion -->
     <string name="achievement_expert_lion" translatable="false">CgkIy_eLwOwfEAIQAw</string>
+    <!-- leaderboard Most Wins -->
+    <string name="leaderboard_most_wins" translatable="false">CgkIy_eLwOwfEAIQBQ</string>
 </resources>
