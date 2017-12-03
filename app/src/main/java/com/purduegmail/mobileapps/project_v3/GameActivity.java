@@ -355,6 +355,8 @@ public class GameActivity extends AppCompatActivity
                 dismissSpinner();
                 showInformationalDialog(getResources().getString(R.string.dialog_message_won),
                         getResources().getString(R.string.dialog_title_forfeited));
+                // leaderboard logic
+                updatePlayerWins();
             }
         }
         @Override
