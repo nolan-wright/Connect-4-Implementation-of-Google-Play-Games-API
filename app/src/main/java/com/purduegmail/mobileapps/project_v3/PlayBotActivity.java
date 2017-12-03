@@ -20,20 +20,12 @@ import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.SignInAccount;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.InvitationsClient;
-import com.google.android.gms.games.RealTimeMultiplayerClient;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.InvitationCallback;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class PlayBotActivity extends AppCompatActivity
     implements GameFragment.GameFragmentListener, Game.GameListener {
@@ -80,7 +72,7 @@ public class PlayBotActivity extends AppCompatActivity
 
     private Game game;
     private GameFragment fragment;
-    private GameBot bot;
+    private SimpleGameBot bot;
     private boolean botGoesFirst = false;
     private ArrayList<int[][]> winningSequences;
     private boolean hasWon = false;
@@ -118,7 +110,7 @@ public class PlayBotActivity extends AppCompatActivity
         else {
             bot_difficulty = 6;
         }
-        bot = new GameBot(bot_difficulty);
+        bot = new SimpleGameBot(bot_difficulty);
         botGoesFirst = ((Switch)findViewById(R.id.switch_who_goes_first)).isChecked();
         initializeGameplayUI();
     }

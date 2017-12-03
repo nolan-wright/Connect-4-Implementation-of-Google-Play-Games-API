@@ -15,6 +15,7 @@ class Game {
     static final int NULL_MARKER = 0; // represents a cell with no marker
 
     private GameListener listener;
+
     /*
      * contains board state
      * board is 7 columns wide
@@ -27,13 +28,11 @@ class Game {
      * # # # # # # #
      */
     private int[][] board;
+
     int[][] getBoard() {
         return board;
     }
-    // TODO: remove below after testing
-    void setBoard(int[][] b) {
-        board = b;
-    }
+
     /*
      * it is possible to have more than one winning sequence
      * a winning sequence is an array of coordinates
@@ -194,6 +193,7 @@ class Game {
         for (int row = ROWS - 1; row >= 3; row--) {
             for (int column = 0; column <= limit; column++) {
                 // start in bottom-left
+                sequence.clear();
                 int margin = 0;
                 while ((row - margin) >= 0 && (column + margin) < COLUMNS) {
                     if (board[row - margin][column + margin] == OPPONENT_MARKER) {
@@ -241,6 +241,7 @@ class Game {
         for (int row = ROWS - 1; row >= 3; row--) {
             for (int column = COLUMNS - 1; column >= limit; column--) {
                 // start in bottom-right
+                sequence.clear();
                 int margin = 0;
                 while ((row - margin) >= 0 && (column - margin) >= 0) {
                     if (board[row - margin][column - margin] == OPPONENT_MARKER) {
@@ -399,6 +400,7 @@ class Game {
         for (int row = ROWS - 1; row >= 3; row--) {
             for (int column = 0; column <= limit; column++) {
                 // start in bottom-left
+                sequence.clear();
                 int margin = 0;
                 while ((row - margin) >= 0 && (column + margin) < COLUMNS) {
                     if (board[row - margin][column + margin] == MY_MARKER) {
@@ -460,6 +462,7 @@ class Game {
         for (int row = ROWS - 1; row >= 3; row--) {
             for (int column = COLUMNS - 1; column >= limit; column--) {
                 // start in bottom-right
+                sequence.clear();
                 int margin = 0;
                 while ((row - margin) >= 0 && (column - margin) >= 0) {
                     if (board[row - margin][column - margin] == MY_MARKER) {
@@ -514,10 +517,10 @@ class Game {
         return columnsCatscratch() && rowsCatscratch() && diagonalsCatscratch();
     }
     private boolean columnsCatscratch() {
-        int myCounter = 0;
-        int opponentCounter = 0;
         for (int column = 0; column < COLUMNS; column++) {
             // start at leftmost column, work across
+            int myCounter = 0;
+            int opponentCounter = 0;
             for (int row = ROWS - 1; row >= 0; row--) {
                 // start at bottom row, work up
                 if (board[row][column] == NULL_MARKER) {
@@ -540,16 +543,14 @@ class Game {
                     return false;
                 }
             }
-            myCounter = 0;
-            opponentCounter = 0;
         }
         return true;
     }
     private boolean rowsCatscratch() {
-        int myCounter = 0;
-        int opponentCounter = 0;
         for (int row = 0; row < ROWS; row++) {
             // start at top, work down
+            int myCounter = 0;
+            int opponentCounter = 0;
             for (int column = 0; column < COLUMNS; column++) {
                 // start at leftmost column, work across
                 if (board[row][column] == NULL_MARKER) {
@@ -572,8 +573,6 @@ class Game {
                     return false;
                 }
             }
-            myCounter = 0;
-            opponentCounter = 0;
         }
         return true;
     }
@@ -581,12 +580,12 @@ class Game {
         return forwardDiagonalsCatscratch() && backwardDiagonalsCatscratch();
     }
     private boolean forwardDiagonalsCatscratch() {
-        int myCounter = 0;
-        int opponentCounter = 0;
         int limit = 3; // bound of winnable area
         for (int row = ROWS - 1; row >= 3; row--) {
             for (int column = 0; column <= limit; column++) {
                 // start in bottom-left
+                int myCounter = 0;
+                int opponentCounter = 0;
                 int margin = 0;
                 while ((row - margin) >= 0 && (column + margin) < COLUMNS) {
                     if (board[row - margin][column + margin] == NULL_MARKER) {
@@ -606,13 +605,8 @@ class Game {
                         // possible win sequence exists
                         return false;
                     }
-                    else {
-                        // move to the next cell on the diagonal
-                        margin++;
-                    }
+                    margin++; // move to the next cell in the diagonal
                 }
-                myCounter = 0;
-                opponentCounter = 0;
             }
             // so that diagonals are not rechecked
             limit = 0;
@@ -620,12 +614,12 @@ class Game {
         return true;
     }
     private boolean backwardDiagonalsCatscratch() {
-        int myCounter = 0;
-        int opponentCounter = 0;
         int limit = 3; // bound of winnable area
         for (int row = ROWS - 1; row >= 3; row--) {
             for (int column = COLUMNS - 1; column >= limit; column--) {
                 // start in bottom-right
+                int myCounter = 0;
+                int opponentCounter = 0;
                 int margin = 0;
                 while ((row - margin) >= 0 && (column - margin) >= 0) {
                     if (board[row - margin][column - margin] == NULL_MARKER) {
@@ -645,13 +639,8 @@ class Game {
                         // possible win sequence exists
                         return false;
                     }
-                    else {
-                        // move to the next cell on the diagonal
-                        margin++;
-                    }
+                    margin++; // move to the next cell in the diagonal
                 }
-                myCounter = 0;
-                opponentCounter = 0;
             }
             // so that diagonals are not rechecked
             limit = 6;
